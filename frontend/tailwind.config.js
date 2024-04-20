@@ -17,7 +17,9 @@ module.exports = {
         input: ["Roboto Mono", "monospace"]
       },  
       colors: {
-        primary: 'blue',
+        background: '#080716',
+        card_0: '#D9D9D9',
+        card_1: '#737373',
       },
     },
   },
