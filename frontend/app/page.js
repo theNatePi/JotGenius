@@ -6,6 +6,13 @@ import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import CustomNavbar from "@/components/MainNavbar";
 
+const scrollToTarget = () => {
+  const targetHeading = document.getElementById('content');
+  if (targetHeading) {
+    targetHeading.scrollIntoView({ behavior: 'smooth' });
+  }
+};
+
 
 export default function Home() {
   const router = useRouter();
@@ -16,9 +23,9 @@ export default function Home() {
     <main className="">
       <style jsx>{`
           .gradient-background {
-            background-size: 100% 100%;
-            background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
-            background-image: radial-gradient(25% 33% at 24% 50%, #B85FD3FF 3%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #FE49FE59 21%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #4F355CFF 7%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #7946AFFF 2%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #4B218FFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #6C246DFF 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #5F3779FF 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #D06DFF9C 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #4E2A8EF5 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #C46DFFF5 24%, #073AFF00 100%),linear-gradient(125deg, #372C78FF 1%, #0A061BFF 100%);
+            background-size: 150% 100%;
+            background-position: -200px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
+            background-image: radial-gradient(25% 33% at 24% 50%, #B85FD3FF 3%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #FE49FE59 21%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #4F355CFF 7%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #7946AFFF 2%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #4B218FFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #6C246DFF 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #5F3779FF 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #D06DFF9C 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #4E2A8EF5 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #C46DFFF5 24%, #073AFF00 100%),linear-gradient(125deg, #372C78FF 0%, #0A061BFF 99%);
           }
           .video-text {
             margin-top: 1100px
@@ -29,9 +36,9 @@ export default function Home() {
         `}</style>
       <CustomNavbar></CustomNavbar> 
       <div className="flex flex-col items-center justify-between p-24 bg-gradient-radial gradient-background w-full">
-        <div className="flex flex-col min-h-svh justify-center">
-          <TypewriterEffect className="-mt-80 ml-5" words={titleWords} />
-          <div className="flex justify-center w-auto pb-10">
+        <div className="flex flex-col min-h-svh justify-center items-center">
+          <TypewriterEffect className="-mt-96 ml-5" words={titleWords} />
+          <div className="flex justify-center w-auto pb-10 ">
             <text className="font-main text-xl pr-2 pt-4">Evolve the way you</text>
             <text className="font-input text-xl pr-1 pt-4">Learn,</text>
             <text className="font-input text-xl pr-1 pt-4">Improve,</text>
@@ -41,7 +48,7 @@ export default function Home() {
           <div className="flex justify-center w-auto">
             <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px]">
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
-              <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-5 py-2 text-2xl font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
+              <span className="font-main font-bold inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-5 py-2 text-2xl font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
                 Sign Up
               </span>
             </button>
@@ -52,10 +59,33 @@ export default function Home() {
               </span>
             </button>
           </div>
+          <button className="relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-10" onClick={scrollToTarget}>
+              <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
+              <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 px-5 py-2 text-2xl font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
+                <text className="ml-14 mr-3">See More</text>
+              
+              <svg
+                fill="none"
+                height="49"
+                viewBox="0 0 300 49"
+                width="71"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M13.2337 0.187119L0.0727539 13.3481L35.1687 48.444L70.2646 13.3481L57.1036 0.187119L35.1687 22.1221L13.2337 0.187119Z"
+                  fill="white"
+                  stroke="currentColor"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="1.5"
+                />
+              </svg>
+              </span>
+          </button>
         </div>
 
-        <div className="flex flex-col min-h-screen text-center">
-          <text className="font-main text-6xl pr-2 pb-5">a new way to grow with</text>
+        <div className="flex flex-col min-h-screen text-center items-center" id="content" style={{ scrollMarginTop: '100px' }}>
+          <text className="font-main text-6xl pr-2 pb-5">a new way to grow</text>
 
           <InfiniteMovingCards
             items={videos}
@@ -74,9 +104,28 @@ export default function Home() {
           />
           
           <text className="font-main text-6xl pr-2 pb-5">all in one place</text>
+          <svg
+            fill="none"
+            height="49"
+            viewBox="0 0 71 49"
+            width="71"
+            xmlns="http://www.w3.org/2000/svg"
+            className="mt-16"
+          >
+            <path
+              d="M13.2337 0.187119L0.0727539 13.3481L35.1687 48.444L70.2646 13.3481L57.1036 0.187119L35.1687 22.1221L13.2337 0.187119Z"
+              fill="white"
+              stroke="currentColor"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth="1.5"
+            />
+            </svg>
         </div>
-        <div className="absolute z-50 video-text rounded-full pt-11 pb-11 pr-16 pl-16 bg-gradient-radial">
-            <text className="font-input font-bold text-6xl pr-2">the content you love</text>
+        <div className="absolute z-30 video-text rounded-full pt-11 pb-11 pr-28 pl-28 bg-gradient-radial">
+            <text className="font-input font-bold text-6xl pr-2">with the content you love</text>
+        </div>
+        <div className="flex flex-col min-h-screen text-center items-center" id="content" style={{ scrollMarginTop: '100px' }}>
         </div>
       </div>
     </main>

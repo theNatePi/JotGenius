@@ -40,6 +40,7 @@ module.exports = {
       },
       colors: {
         background: '#080716',
+        background_complement: '#0A061BBB',
         test_color: '#D3D1E9',
         gradient_0: '#080716',
         gradient_1: '#110f2b',
@@ -48,6 +49,9 @@ module.exports = {
         gradient_0: '#080716',
         gradient_1: '#110f2b',
         typing_cursor: '#333355',
+        
+        navbar_button_selected: '#9e58d3',
+        navbar_button_secondary: '#734696'
       },
     },
   },
