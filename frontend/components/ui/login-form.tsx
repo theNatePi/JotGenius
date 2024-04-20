@@ -35,13 +35,35 @@ export function LoginForm() {
     return true;
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Form submitted", formData);
-      // Perform form submission logic here
+      try {
+        //const url = new URL('http://127.0.0.1:5000/login');
+
+        const response = await fetch('http://127.0.0.1:5000/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (response.ok) {
+          console.log('Login successful!');
+          console.log(response);
+          // Redirect or show success message
+        } else {
+          console.error('Login failed');
+          // Handle error response
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+        // Handle fetch error
+      }
     }
   };
+
   return (
     <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-test_color dark:bg-background">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
