@@ -35,7 +35,7 @@ export default function Home() {
             background-image: radial-gradient(circle, rgba(160, 92, 195, 1) 0%, rgba(160, 92, 195, 0.8) 50%, rgba(160, 92, 195, 0) 100%);
           }
         `}</style>
-      <CustomNavbar></CustomNavbar> 
+      <CustomNavbar first={true} second={false} third={false} />
       <div className="flex flex-col items-center justify-between p-24 bg-gradient-radial gradient-background w-full">
         <div className="flex flex-col min-h-svh justify-center items-center">
           <TypewriterEffect className="-mt-96 ml-5" words={titleWords} />
@@ -268,7 +268,7 @@ const content = [
     ),
   },
   {
-    title: "recall what you learned",
+    title: "recall what you learn",
     description:
       "Build your personal repository of notes encompassing a vast array of topics, curated to your interests and learning objectives. Easily revisit and review your notes at any time, enabling efficient recall and reinforcement of key concepts. By organizing your knowledge library within JotGenius, you can build a personal knowledge base passively while practicing your note taking skills.",
     content: (

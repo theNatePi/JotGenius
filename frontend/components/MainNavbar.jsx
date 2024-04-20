@@ -1,25 +1,25 @@
 import React from "react";
 import {Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem} from "@nextui-org/react";
 
-export default function CustomNavbar() {
+export default function CustomNavbar({ first, second, third }) {
   return (
-    <Navbar className="bg-background_complement w-full">
+    <Navbar className="bg-background_complement w-full border-b-1 border-navbar_button_selected">
       <NavbarBrand className="-ml-3.5">
         <p className="font-bold text-inherit">JotGenius</p>
       </NavbarBrand>
       <NavbarContent className="hidden sm:flex gap-4" justify="center">
-        <NavbarItem isActive>
-          <Link className="text-navbar_button_selected" href="#">
+        <NavbarItem>
+          <Link className={first ? "text-navbar_button_selected font-bold" : "text-navbar_button_secondary"} href="#">
             Home
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link href="/library" className="text-navbar_button_secondary">
+          <Link href="/library" className={second ? "text-navbar_button_selected font-bold" : "text-navbar_button_secondary"}>
             Library
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="blue" href="#" className="text-navbar_button_secondary">
+          <Link color="blue" href="#" className={third ? "text-navbar_button_selected font-bold" : "text-navbar_button_secondary"}>
             Dashboard
           </Link>
         </NavbarItem>

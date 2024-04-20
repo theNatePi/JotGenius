@@ -11,7 +11,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|navbar|progress|ripple|spinner).js"
+    "./node_modules/@nextui-org/theme/dist/components/(button|input|modal|navbar|progress|ripple|spinner).js"
   ],
   theme: {
     extend: {
@@ -44,14 +44,15 @@ module.exports = {
         test_color: '#D3D1E9',
         gradient_0: '#080716',
         gradient_1: '#110f2b',
-        card_0: '#D9D9D9',
-        card_1: '#737373',
-        gradient_0: '#080716',
-        gradient_1: '#110f2b',
+        card_0: '#D9D9D999',
+        card_1: '#737373FF',
         typing_cursor: '#333355',
         
         navbar_button_selected: '#9e58d3',
-        navbar_button_secondary: '#734696'
+        navbar_button_secondary: '#734696',
+
+        title_0: '#b85fd3',
+        sub_0: '#ca99d8'
       },
     },
   },
