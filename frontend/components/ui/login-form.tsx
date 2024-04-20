@@ -51,7 +51,8 @@ export function LoginForm() {
 
         if (response.ok) {
           console.log('Login successful!');
-          console.log(response);
+          const responseData = await response.text();
+          console.log('Response:', responseData);
           // Redirect or show success message
         } else {
           console.error('Login failed');
