@@ -9,14 +9,40 @@ import {
 } from "@tabler/icons-react";
 
 export function SignupFormDemo() {
+  const [formData, setFormData] = React.useState({
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    confirmpassword: '',
+  });
+
+  const [formError, setFormError] = React.useState('');
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { id, value } = e.target;
+    setFormData(prevState => ({
+      ...prevState,
+      [id]: value
+    }));
+  };
+
+  const validateForm = () => {
+    return true;
+  };
+
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    console.log("Form submitted");
+    if (validateForm()) {
+      console.log("Form submitted", formData);
+      // Perform form submission logic here
+    }
   };
+
   return (
-    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-white dark:bg-black">
+    <div className="max-w-md w-full mx-auto rounded-none md:rounded-2xl p-4 md:p-8 shadow-input bg-test_color dark:bg-black">
       <h2 className="font-bold text-xl text-neutral-800 dark:text-neutral-200">
-        Welcome to JotGenius
+        Welcome to JotGenius!
       </h2>
       <p className="text-neutral-600 text-sm max-w-sm mt-2 dark:text-neutral-300">
         Let's create your account! Just fill out the information below and
@@ -27,27 +53,29 @@ export function SignupFormDemo() {
         <div className="flex flex-col md:flex-row space-y-2 md:space-y-0 md:space-x-2 mb-4">
           <LabelInputContainer>
             <Label htmlFor="firstname">First name</Label>
-            <Input id="firstname" placeholder="Joe" type="text" />
+            <Input id="firstname" placeholder="Joe" type="text" value={formData.firstname} onChange={handleChange} />
           </LabelInputContainer>
           <LabelInputContainer>
             <Label htmlFor="lastname">Last name</Label>
-            <Input id="lastname" placeholder="Bruin" type="text" />
+            <Input id="lastname" placeholder="Bruin" type="text" value={formData.lastname} onChange={handleChange}/>
           </LabelInputContainer>
         </div>
         <LabelInputContainer className="mb-4 font-main">
           <Label htmlFor="email">Email Address</Label>
-          <Input id="email" placeholder="example@email.com" type="email" className="placeholder-main-font"/>
+          <Input id="email" placeholder="example@email.com" type="email" className="placeholder-main-font" value={formData.email} onChange={handleChange}/>
         </LabelInputContainer>
         <LabelInputContainer className="mb-4">
           <Label htmlFor="password">Password</Label>
-          <Input id="password" placeholder="••••••••" type="password" />
+          <Input id="password" placeholder="••••••••" type="password" value={formData.password} onChange={handleChange} />
         </LabelInputContainer>
         <LabelInputContainer className="mb-8">
-          <Label htmlFor="twitterpassword">Confirm Password</Label>
+          <Label htmlFor="confirmpassword">Confirm Password</Label>
           <Input
-            id="twitterpassword"
+            id="confirmpassword"
             placeholder="••••••••"
-            type="twitterpassword"
+            type="password"
+            value={formData.confirmpassword}
+            onChange={handleChange}
           />
         </LabelInputContainer>
 
