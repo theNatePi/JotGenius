@@ -39,8 +39,12 @@ module.exports = {
       },
       colors: {
         background: '#080716',
+        test_color: '#D3D1E9',
         card_0: '#D9D9D9',
         card_1: '#737373',
+        gradient_0: '#080716',
+        gradient_1: '#110f2b',
+        typing_cursor: '#333355'
       },
     },
   },
