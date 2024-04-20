@@ -1,7 +1,8 @@
 const { nextui } = require('@nextui-org/theme');
 const {
   default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette")
+} = require("tailwindcss/lib/util/flattenColorPalette");
+const svgToDataUri = require("mini-svg-data-uri");
 
 
 /** @type {import('tailwindcss').Config} */
@@ -10,7 +11,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|ripple|spinner).js"
+    "./node_modules/@nextui-org/theme/dist/components/(button|navbar|progress|ripple|spinner).js"
   ],
   theme: {
     extend: {
@@ -39,6 +40,7 @@ module.exports = {
       },
       colors: {
         background: '#080716',
+        background_complement: '#0A061BBB',
         test_color: '#D3D1E9',
         gradient_0: '#080716',
         gradient_1: '#110f2b',
@@ -46,7 +48,10 @@ module.exports = {
         card_1: '#737373',
         gradient_0: '#080716',
         gradient_1: '#110f2b',
-        typing_cursor: '#333355'
+        typing_cursor: '#333355',
+        
+        navbar_button_selected: '#9e58d3',
+        navbar_button_secondary: '#734696'
       },
     },
   },
