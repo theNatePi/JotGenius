@@ -6,37 +6,40 @@ import { useState, useEffect } from 'react';
 import {Progress} from "@nextui-org/react";
 
 let player = {};
+let videoIdSlug = {};
 
 class Video extends React.Component {
-  render() {
+render() {
     const opts = {
-      height: '390',
-      width: '640',
-      playerVars: {
+    height: '390',
+    width: '640',
+    playerVars: {
         // https://developers.google.com/youtube/player_parameters
         autoplay: 0,
         controls: 0,
         disablekb: 1,
-      },
+    },
     };
 
-    return <YouTube videoId="DduTEXDWitw" opts={opts} onReady={this._onReady} onPause={this._onPause} />;
-  }
+    return <YouTube videoId={videoIdSlug} opts={opts} onReady={this._onReady} onPause={this._onPause} />;
+}
 
-  _onReady(event) {
+_onReady(event) {
     // access to player in all event handlers via event.target
     event.target.pauseVideo();
     player = event.target;
-  }
+}
 
-  _onPause(event) {
+_onPause(event) {
     event.target.playVideo();
-  }
+}
 };
 
-export default function Home() {
+export default function Home({ params }) {
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
+
+    videoIdSlug = params.slug[1];
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -76,10 +79,12 @@ export default function Home() {
                         indicator: "bg-gradient-to-r from-navbar_button_selected to-navbar_button_secondary",
                         label: "tracking-wider font-medium text-default-600",
                         value: "text-foreground/60",
-                      }}
+                    }}
                 />
                 <p className="text-lg w-48 text-right font-input"> {formatTime(currentTime)} / {formatTime(duration)} </p>
             </div>
+            <text>{params.slug[0]}</text>
+            <text>{}</text>
         </main>
     );
 }
