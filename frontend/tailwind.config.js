@@ -19,7 +19,7 @@ module.exports = {
       },
       animation: {
         scroll:
-          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",
+          "scroll var(--animation-duration, 40s) var(--animation-direction, forwards) linear infinite",  
       },
       keyframes: {
         scroll: {
@@ -40,6 +40,8 @@ module.exports = {
       colors: {
         background: '#080716',
         test_color: '#D3D1E9',
+        gradient_0: '#080716',
+        gradient_1: '#110f2b',
         card_0: '#D9D9D9',
         card_1: '#737373',
         gradient_0: '#080716',
