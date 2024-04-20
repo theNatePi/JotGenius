@@ -10,7 +10,7 @@ export default function Home() {
 
   return (
     <main className="flex flex-col items-center justify-between p-24">
-      <h1 className="pb-20">TESTING</h1>
+      <h1 className="pb-20 font-main">JotGenius</h1>
       <button className="bg-white text-black" onClick={() => router.push('/login')}>LOGIN</button>
     </main>
   );
