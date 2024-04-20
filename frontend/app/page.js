@@ -6,6 +6,7 @@ import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
 import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 
+
 export default function Home() {
   const router = useRouter();
 
@@ -21,8 +22,12 @@ export default function Home() {
           <text className="font-input text-xl pr-2 pt-4">Recall</text>
         </div>
         <div className="flex justify-center w-auto">
-          <text>t</text>
-          <text>t</text>
+          <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px]">
+            <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
+            <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-3 py-1 text-sm font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
+              Sign Up
+            </span>
+          </button>
         </div>
       </div>
 
