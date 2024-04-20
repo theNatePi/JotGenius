@@ -7,7 +7,6 @@ import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 import CustomNavbar from "@/components/MainNavbar";
 
 
-
 export default function Home() {
   const router = useRouter();
 
@@ -20,6 +19,12 @@ export default function Home() {
             background-size: 100% 100%;
             background-position: 0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px,0px 0px;
             background-image: radial-gradient(25% 33% at 24% 50%, #B85FD3FF 3%, #073AFF00 100%),radial-gradient(18% 28% at 18% 71%, #FE49FE59 21%, #073AFF00 100%),radial-gradient(42% 53% at 15% 94%, #4F355CFF 7%, #073AFF00 100%),radial-gradient(70% 53% at 36% 76%, #7946AFFF 2%, #073AFF00 100%),radial-gradient(42% 53% at 34% 72%, #4B218FFF 7%, #073AFF00 100%),radial-gradient(18% 28% at 35% 87%, #6C246DFF 7%, #073AFF00 100%),radial-gradient(31% 43% at 7% 98%, #5F3779FF 24%, #073AFF00 100%),radial-gradient(21% 37% at 72% 23%, #D06DFF9C 24%, #073AFF00 100%),radial-gradient(35% 56% at 91% 74%, #4E2A8EF5 9%, #073AFF00 100%),radial-gradient(74% 86% at 67% 38%, #C46DFFF5 24%, #073AFF00 100%),linear-gradient(125deg, #372C78FF 1%, #0A061BFF 100%);
+          }
+          .video-text {
+            margin-top: 1100px
+          }
+          .bg-gradient-radial {
+            background-image: radial-gradient(circle, rgba(160, 92, 195, 1) 0%, rgba(160, 92, 195, 0.8) 50%, rgba(160, 92, 195, 0) 100%);
           }
         `}</style>
       <CustomNavbar></CustomNavbar> 
@@ -49,21 +54,30 @@ export default function Home() {
           </div>
         </div>
 
-        <InfiniteMovingCards
-          items={videos}
-          direction="right"
-          speed="slow"
-        />
-        <InfiniteMovingCards
-          items={videos}
-          direction="left"
-          speed="slow"
-        />
-        <InfiniteMovingCards
-          items={videos}
-          direction="right"
-          speed="slow"
-        />
+        <div className="flex flex-col min-h-screen text-center">
+          <text className="font-main text-6xl pr-2 pb-5">a new way to grow with</text>
+
+          <InfiniteMovingCards
+            items={videos}
+            direction="right"
+            speed="slow"
+          />
+          <InfiniteMovingCards
+            items={videos}
+            direction="left"
+            speed="slow"
+          />
+          <InfiniteMovingCards
+            items={videos}
+            direction="right"
+            speed="slow"
+          />
+          
+          <text className="font-main text-6xl pr-2 pb-5">all in one place</text>
+        </div>
+        <div className="absolute z-50 video-text rounded-full pt-11 pb-11 pr-16 pl-16 bg-gradient-radial">
+            <text className="font-input font-bold text-6xl pr-2">the content you love</text>
+        </div>
       </div>
     </main>
   );

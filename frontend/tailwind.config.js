@@ -1,7 +1,8 @@
 const { nextui } = require('@nextui-org/theme');
 const {
   default: flattenColorPalette,
-} = require("tailwindcss/lib/util/flattenColorPalette")
+} = require("tailwindcss/lib/util/flattenColorPalette");
+const svgToDataUri = require("mini-svg-data-uri");
 
 
 /** @type {import('tailwindcss').Config} */
@@ -46,7 +47,7 @@ module.exports = {
         card_1: '#737373',
         gradient_0: '#080716',
         gradient_1: '#110f2b',
-        typing_cursor: '#333355'
+        typing_cursor: '#333355',
       },
     },
   },
