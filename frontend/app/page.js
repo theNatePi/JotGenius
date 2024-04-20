@@ -3,53 +3,129 @@
 import Image from "next/image";
 import { useRouter } from 'next/navigation';
 import { InfiniteMovingCards } from "@/components/ui/infinite-moving-cards";
-
+import { TypewriterEffect } from "@/components/ui/typewriter-effect";
 
 
 export default function Home() {
   const router = useRouter();
 
   return (
-    <main className="flex min-h-screen  flex-col items-center justify-between p-24 bg-background">
-      <h1 className="pb-20 font-main text-8xl">JotGenius</h1>
-      <button className="bg-white text-black" onClick={() => router.push('/login')}>LOGIN</button>
+    <main className="flex flex-col items-center justify-between p-24 bg-gradient-to-br from-gradient_0 to-gradient_1">
+      <div className="flex flex-col min-h-svh justify-center ">
+        <TypewriterEffect className="-mt-80" words={titleWords} />
+        <div className="flex justify-center w-auto pb-10">
+          <text className="font-main text-xl pr-2 pt-4">Evolve the way you</text>
+          <text className="font-input text-xl pr-1 pt-4">Learn,</text>
+          <text className="font-input text-xl pr-1 pt-4">Improve,</text>
+          <text className="font-main text-xl pr-2 pt-4">and</text>
+          <text className="font-input text-xl pr-2 pt-4">Recall</text>
+        </div>
+        <div className="flex justify-center w-auto">
+          <text>t</text>
+          <text>t</text>
+        </div>
+      </div>
+
       <InfiniteMovingCards
-        items={testimonials}
+        items={videos}
+        direction="right"
+        speed="slow"
+      />
+      <InfiniteMovingCards
+        items={videos}
+        direction="left"
+        speed="slow"
+      />
+      <InfiniteMovingCards
+        items={videos}
         direction="right"
         speed="slow"
       />
     </main>
   );
-}
+};
 
-const testimonials = [
+const titleWords = [
   {
-    quote:
-      "It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief, it was the epoch of incredulity, it was the season of Light, it was the season of Darkness, it was the spring of hope, it was the winter of despair.",
-    name: "Charles Dickens",
-    title: "A Tale of Two Cities",
+    text: "JotGenius",
+    className: "font-main pb-8 font-main text-8xl text-white",
+  },
+];
+
+const CARDS = [
+  {
+    id: 0,
+    name: "",
+    designation: "",
+    content: (
+      <p className="font-input text-xl">
+        Learn
+      </p>
+    ),
   },
   {
-    quote:
-      "To be, or not to be, that is the question: Whether 'tis nobler in the mind to suffer The slings and arrows of outrageous fortune, Or to take Arms against a Sea of troubles, And by opposing end them: to die, to sleep.",
-    name: "William Shakespeare",
-    title: "Hamlet",
+    id: 1,
+    name: "",
+    designation: "",
+    content: (
+      <p className="font-input text-xl">
+        Improve
+      </p>
+    ),
   },
   {
-    quote: "All that we see or seem is but a dream within a dream.",
-    name: "Edgar Allan Poe",
-    title: "A Dream Within a Dream",
+    id: 2,
+    name: "",
+    designation: "",
+    content: (
+      <p className="font-input text-xl">
+        Recall
+      </p>
+    ),
+  },
+];
+
+const videos = [
+  {
+    image_path:
+      "https://img.youtube.com/vi/Xj_VDOZjds8/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=Xj_VDOZjds8",
   },
   {
-    quote:
-      "It is a truth universally acknowledged, that a single man in possession of a good fortune, must be in want of a wife.",
-    name: "Jane Austen",
-    title: "Pride and Prejudice",
+    image_path:
+      "https://img.youtube.com/vi/1UTjWy-vnOo/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=1UTjWy-vnOo",
   },
   {
-    quote:
-      "Call me Ishmael. Some years ago—never mind how long precisely—having little or no money in my purse, and nothing particular to interest me on shore, I thought I would sail about a little and see the watery part of the world.",
-    name: "Herman Melville",
-    title: "Moby-Dick",
+    image_path:
+      "https://img.youtube.com/vi/pjoQdz0nxf4/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=pjoQdz0nxf4",
+  },
+  {
+    image_path:
+      "https://img.youtube.com/vi/Zrv1EDIqHkY/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=Zrv1EDIqHkY",
+  },
+  {
+    image_path:
+      "https://img.youtube.com/vi/t6Wc7OMks4U/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=t6Wc7OMks4U",
+  },
+  {
+    image_path:
+      "https://img.youtube.com/vi/wjZofJX0v4M/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=wjZofJX0v4M",
+  },
+  {
+    image_path:
+      "https://img.youtube.com/vi/QqRREz0iBes/maxresdefault.jpg",
+    url:
+      "https://www.youtube.com/watch?v=QqRREz0iBes",
   },
 ];
