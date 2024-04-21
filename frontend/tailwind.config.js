@@ -11,7 +11,7 @@ module.exports = {
     "./pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./components/**/*.{js,ts,jsx,tsx,mdx}",
     "./app/**/*.{js,ts,jsx,tsx,mdx}",
-    "./node_modules/@nextui-org/theme/dist/components/(button|input|modal|navbar|progress|ripple|spinner).js"
+    "./node_modules/@nextui-org/theme/dist/components/(button|chip|input|modal|navbar|progress|ripple|spinner).js"
   ],
   theme: {
     extend: {
