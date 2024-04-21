@@ -65,10 +65,16 @@ export default function Home() {
               </span>
             </button>
           </div>
-          <button className="relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-10" onClick={scrollToTarget}>
+          <button className="relative inline-flex h-10 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-10" onClick={() => router.push('/library/guest')}>
+              <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
+              <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 bg-opacity-80 px-5 py-2 text-xl text-white backdrop-blur-3xl hover:bg-gradient_1">
+                <text className="">Start A New Jot</text>
+              </span>
+          </button>
+          <button className="relative inline-flex h-12 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-5" onClick={scrollToTarget}>
               <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
               <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 px-5 py-2 text-2xl font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
-                <text className="ml-14 mr-3">See More</text>
+                <text className="ml-2  -mr-5 w-full">Learn More</text>
               
               <svg
                 fill="none"
@@ -253,7 +259,7 @@ const content = [
     description:
       "Dive into a world of knowledge with JotGenius, where you can watch videos from diverse channels covering a range of topics. Enhance your learning experience by practicing your skills while absorbing valuable information from expert creators. Whether you're exploring new interests or deepening existing knowledge, you will be introduced to new topics while honing your abilities.",
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] flex items-center justify-center text-white">
+      <div className="h-full w-full flex items-center justify-center text-white">
         <text className="font-input text-6xl">
           learn
         </text>
@@ -265,7 +271,7 @@ const content = [
     description:
       "Elevate your note-taking and typing skills with AI-driven insights and automatic scoring. Receive personalized feedback to enhance your efficiency and accuracy in capturing essential information from the videos you watch, while improving your ability to do so in real world scenarios. Track your progress over time and continually refine your abilities, ensuring that you make the most out of every learning opportunity.",
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] flex items-center justify-center text-white">
+      <div className="h-full w-full flex items-center justify-center text-white">
         <text className="font-input text-6xl">
           improve
         </text>
@@ -277,7 +283,7 @@ const content = [
     description:
       "Build your personal repository of notes encompassing a vast array of topics, curated to your interests and learning objectives. Easily revisit and review your notes at any time, enabling efficient recall and reinforcement of key concepts. By organizing your knowledge library within JotGenius, you can build a personal knowledge base passively while practicing your note taking skills.",
     content: (
-      <div className="h-full w-full bg-[linear-gradient(to_bottom_right,var(--cyan-500),var(--emerald-500))] flex items-center justify-center text-white">
+      <div className="h-full w-full flex items-center justify-center text-white">
         <text className="font-input text-6xl">
           recall
         </text>

@@ -10,6 +10,7 @@ import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDis
 
 let player = {};
 let videoIdSlug = {};
+let userIdSlug = {};
 
 class Video extends React.Component {
 render() {
@@ -71,6 +72,7 @@ export default function Home({ params }) {
     }
 
     videoIdSlug = params.slug[1];
+    userIdSlug = params.slug[0];
 
     useEffect(() => {
         const intervalId = setInterval(() => {
@@ -152,7 +154,7 @@ export default function Home({ params }) {
             }
             `}</style>
 
-            <CustomNavbar />
+            <CustomNavbar userId={userIdSlug}/>
             <div className='flex flex-row'>
                 <div className='flex flex-col items-center absolute left-10 w-52 z-0 pt-40'>
                     <div className='mb-3'>
