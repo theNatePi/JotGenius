@@ -26,3 +26,17 @@ def signup():
         print(info)
         return database.attemptSignUp(info['email'], info['password'],
                                       info['confirmpassword'], info['firstname'], info['lastname'])
+
+
+@app.route('/type', methods=['POST'])
+def evaluate_type():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        info = request.json
+        print(info)
+        return "1"
+
+
+if __name__ == '__main__':
+    # Change the host to '0.0.0.0' to listen on all network interfaces
+    app.run(host='0.0.0.0', port=8080)
