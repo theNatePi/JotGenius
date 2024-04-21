@@ -2,12 +2,15 @@ from pocketbase import PocketBase  # Client also works the same
 from pocketbase.client import FileUpload
 from pocketbase.utils import ClientResponseError
 from flask import jsonify
+from flask import jsonify
 
 CLIENT = PocketBase('http://127.0.0.1:8090')
 
+
 def attemptLogin(username, password):
     try:
-        received = CLIENT.collection('jot_users').auth_with_password(username, password)
+        received = CLIENT.collection(
+            'jot_users').auth_with_password(username, password)
         login_data = {
             "code": 200,
             "message": "Login successful.",
@@ -17,27 +20,7 @@ def attemptLogin(username, password):
     except ClientResponseError as err:
         login_data = {
             "code": err.status,
-            "message": err.data['identity']['message'],
-            "user_id": ""
-        }
-        return jsonify(login_data)
-
-def attemptSignUp(username, email, password, password_conf, first, last):
-    signup_data = {
-        "username": username,
-        "email": email,
-        "emailVisibility": True,
-        "password": password,
-        "passwordConfirm": password_conf,
-        "first_name": first,
-        "last_name": last,
-        "note_library": {}
-    }
-    try:
-        CLIENT.collection('jot_users').create(signup_data)
-        result_data = {
-            "code": 200,
-            "message": "Sign up successful."
+            "message": err.data['identity']['message']
         }
         return jsonify(result_data)
     except ClientResponseError as err:
@@ -54,8 +37,11 @@ def attemptSignUp(username, email, password, password_conf, first, last):
             }
             return jsonify(result_data)
 
+
 def giveNoteToUser(user_id, note_id):
-    user_data = CLIENT.collection('jot_users').get_first_list_item(f"id=\"{user_id}\"")
+    user_data = CLIENT.collection(
+        'jot_users').get_first_list_item(f"id=\"{user_id}\"")
+
 
 def attemptNoteUpload(user_id, content, video_id):
     note_data = {
@@ -64,7 +50,7 @@ def attemptNoteUpload(user_id, content, video_id):
     }
     try:
         note_data = CLIENT.collection('jot_notes').create(note_data)
-        
+
     except ClientResponseError as err:
         if err.status == 400:
             note_data = {
@@ -80,3 +66,26 @@ def attemptNoteUpload(user_id, content, video_id):
             return jsonify(note_data)
 
 # giveNoteToUser('l3kwmiryni8i0il', 'l3kwmiryni8i0il')
+
+
+def attemptNoteUpload(user_id, content, video_id):
+    note_data = {
+        "note_content": content,
+        "video_id": video_id
+    }
+    try:
+        note_data = CLIENT.collection('jot_notes').create(note_data)
+
+    except ClientResponseError as err:
+        if err.status == 400:
+            note_data = {
+                "code": 400,
+                "message": err.data['identity']['message']
+            }
+            return jsonify(note_data)
+        elif err.status == 403:
+            note_data = {
+                "code": 403,
+                "message": err.data['message']
+            }
+            return jsonify(note_data)
