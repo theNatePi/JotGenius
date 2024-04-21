@@ -5,41 +5,49 @@ import YouTube from 'react-youtube';
 import { useState, useEffect } from 'react';
 import {Progress} from "@nextui-org/react";
 import CustomNavbar from '@/components/MainNavbar';
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-
+import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Spinner} from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
 
 let player = {};
 let videoIdSlug = {};
 let userIdSlug = {};
+let handleFinal = {};
+let done = false;
 
 class Video extends React.Component {
-render() {
-    const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        autoplay: 0,
-        controls: 0,
-        disablekb: 1,
-    },
-    };
+    render() {
+        const opts = {
+        height: '390',
+        width: '640',
+        playerVars: {
+            // https://developers.google.com/youtube/player_parameters
+            autoplay: 0,
+            controls: 0,
+            disablekb: 1,
+        },
+        };
+    
+        return <YouTube videoId={videoIdSlug} opts={opts} onReady={this._onReady} onPause={this._onPause} onEnd={this._onEnd} />;
+    }
+    
+    _onReady(event) {
+        // access to player in all event handlers via event.target
+        event.target.pauseVideo();
+        player = event.target;
+    }
 
-    return <YouTube videoId={videoIdSlug} opts={opts} onReady={this._onReady} onPause={this._onPause} />;
-}
+    _onPause(event) {
+        event.target.playVideo();
+    }
 
-_onReady(event) {
-    // access to player in all event handlers via event.target
-    event.target.pauseVideo();
-    player = event.target;
-}
-
-_onPause(event) {
-    event.target.playVideo();
-}
+    _onEnd(event) {
+        handleFinal();
+    }
 };
 
 export default function Home({ params }) {
+    const router = useRouter();
+
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [title, setTitle] = useState(null);
@@ -54,6 +62,7 @@ export default function Home({ params }) {
     const {isOpen, onOpen, onClose} = useDisclosure();
     const {isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1} = useDisclosure();
     const {isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2} = useDisclosure();
+    const {isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3} = useDisclosure();
     const [backdrop, setBackdrop] = React.useState('opaque')
 
     const handleOpen = () => {
@@ -71,18 +80,51 @@ export default function Home({ params }) {
         onOpen2();
     }
 
+    handleFinal = () => {
+        setTimeout(() => {
+            setBackdrop('blur')
+            onOpen3();
+
+            let finalJSON = {
+                'content': notesWithTimes,
+                'videoId': videoIdSlug
+            }
+            console.log(finalJSON);
+
+            fetch('http://192.0.0.2:8080/type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalJSON),
+            });
+
+            setTimeout(() => {
+                let noteId = 5
+                router.push(`/note/${userIdSlug}/${noteId}`);
+            }, 1000);
+        }, 1000);
+    }
+
     videoIdSlug = params.slug[1];
     userIdSlug = params.slug[0];
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             try {
-                setCurrentTime(player.getCurrentTime());
+                if (!done) {
+                    setCurrentTime(player.getCurrentTime());
+                }
                 setDuration(player.getDuration());
 
                 setIsPlaying(player.getPlayerState() === 1);
                 if (player.getPlayerState() === 0) {
-                    console.log(notesWithTimes);
+                    if (!done) {
+                        // setNotes([inputValue, ...notes]);
+                        // setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
+                        done = true;
+                        setCurrentTime(player.getDuration());
+                    }
                 }
             }
             catch {
@@ -131,7 +173,24 @@ export default function Home({ params }) {
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
           setNotes([inputValue, ...notes]);
-          setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
+        //   setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
+
+          let wpm = 0;
+          let duration = currentTime - startTime;
+          let lenWords = inputValue.split(' ').length;
+          if (duration >= 60) {
+            wpm = lenWords / (duration / 60);
+          } else {
+            let mid = (60 / duration);
+            wpm = lenWords * mid;
+          }
+
+          setNotesWithTimes([...notesWithTimes, {
+            'note': inputValue,
+            'start': startTime,
+            'end': currentTime,
+            'wpm': parseInt(wpm)
+          }]);
           setFirstLetter(true);
           setInputValue('');
         } else {
@@ -314,6 +373,31 @@ export default function Home({ params }) {
                         <Button color="danger" variant="light" onPress={onClose2}>
                         Close
                         </Button>
+                    </ModalFooter>
+                    </>
+                )}
+                </ModalContent>
+            </Modal>
+
+            <Modal backdrop={backdrop} isOpen={isOpen3} onClose={onClose3} isDismissable={false} 
+                classNames={{
+                    closeButton: 'bg-transparent hover:bg-transparent hover:cursor-not-allowed'
+                }}
+            >
+                <ModalContent className='bg-black'>
+                {(onClose3) => (
+                    <>
+                    <ModalHeader className="flex flex-col gap-1">Nice Job!</ModalHeader>
+                    <ModalBody>
+                        <p className='text-main text-title_0'> 
+                            We are getting your score ready!
+                        </p>
+                        <p className='text-input'>
+                            Please sit tight while <a href="https://gemini.google.com/" target='tab' className='underline text-title_0'>Gemini</a> generates a score for your performance.
+                        </p>
+                        <Spinner size='lg' />
+                    </ModalBody>
+                    <ModalFooter>
                     </ModalFooter>
                     </>
                 )}

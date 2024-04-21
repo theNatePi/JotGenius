@@ -55,7 +55,7 @@ const  VideoCard = ({videoUrl, videoId, videoSrc}) => {
             translateZ="20"
             className="font-main text-xl font-bold text-white"
           >
-            {title}
+            {title ? (title.length > 33 ? `${title.slice(0, 33)}...` : `${title}`) : 'Loading...'}
           </CardItem>
           <CardItem translateZ="50" className="w-full mt-4">
             <Image
@@ -117,8 +117,8 @@ const videos = [
     id: "GIgc4viI2Vg"
   },
   {
-    image_path: "https://img.youtube.com/vi/GIgc4viI2Vg/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=GIgc4viI2Vg",
-    id: "GIgc4viI2Vg"
+    image_path: "https://img.youtube.com/vi/3AGYCjZjSR8/maxresdefault.jpg",
+    url: "https://www.youtube.com/watch?v=3AGYCjZjSR8",
+    id: "3AGYCjZjSR8"
   },
 ]
