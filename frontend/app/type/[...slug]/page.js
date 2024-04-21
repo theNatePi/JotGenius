@@ -3,43 +3,51 @@
 import React from 'react';
 import YouTube from 'react-youtube';
 import { useState, useEffect } from 'react';
-import {Progress} from "@nextui-org/react";
+import { Progress } from "@nextui-org/react";
 import CustomNavbar from '@/components/MainNavbar';
-import {Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure} from "@nextui-org/react";
-
+import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter, Button, useDisclosure, Spinner } from "@nextui-org/react";
+import { useRouter } from 'next/navigation';
 
 let player = {};
 let videoIdSlug = {};
 let userIdSlug = {};
+let handleFinal = {};
+let done = false;
 
 class Video extends React.Component {
-render() {
-    const opts = {
-    height: '390',
-    width: '640',
-    playerVars: {
-        // https://developers.google.com/youtube/player_parameters
-        autoplay: 0,
-        controls: 0,
-        disablekb: 1,
-    },
-    };
+    render() {
+        const opts = {
+            height: '390',
+            width: '640',
+            playerVars: {
+                // https://developers.google.com/youtube/player_parameters
+                autoplay: 0,
+                controls: 0,
+                disablekb: 1,
+            },
+        };
 
-    return <YouTube videoId={videoIdSlug} opts={opts} onReady={this._onReady} onPause={this._onPause} />;
-}
+        return <YouTube videoId={videoIdSlug} opts={opts} onReady={this._onReady} onPause={this._onPause} onEnd={this._onEnd} />;
+    }
 
-_onReady(event) {
-    // access to player in all event handlers via event.target
-    event.target.pauseVideo();
-    player = event.target;
-}
+    _onReady(event) {
+        // access to player in all event handlers via event.target
+        event.target.pauseVideo();
+        player = event.target;
+    }
 
-_onPause(event) {
-    event.target.playVideo();
-}
+    _onPause(event) {
+        event.target.playVideo();
+    }
+
+    _onEnd(event) {
+        handleFinal();
+    }
 };
 
 export default function Home({ params }) {
+    const router = useRouter();
+
     const [currentTime, setCurrentTime] = useState(0);
     const [duration, setDuration] = useState(0);
     const [title, setTitle] = useState(null);
@@ -51,9 +59,10 @@ export default function Home({ params }) {
     const [firstLetter, setFirstLetter] = useState(true);
     const [startTime, setStartTime] = useState(0);
 
-    const {isOpen, onOpen, onClose} = useDisclosure();
-    const {isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1} = useDisclosure();
-    const {isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2} = useDisclosure();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const { isOpen: isOpen1, onOpen: onOpen1, onClose: onClose1 } = useDisclosure();
+    const { isOpen: isOpen2, onOpen: onOpen2, onClose: onClose2 } = useDisclosure();
+    const { isOpen: isOpen3, onOpen: onOpen3, onClose: onClose3 } = useDisclosure();
     const [backdrop, setBackdrop] = React.useState('opaque')
 
     const handleOpen = () => {
@@ -71,18 +80,51 @@ export default function Home({ params }) {
         onOpen2();
     }
 
+    handleFinal = () => {
+        setTimeout(() => {
+            setBackdrop('blur')
+            onOpen3();
+
+            let finalJSON = {
+                'content': notesWithTimes,
+                'videoId': videoIdSlug
+            }
+            console.log(finalJSON);
+
+            fetch('http://127.0.0.1:5000/type', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(finalJSON),
+            });
+
+            setTimeout(() => {
+                let noteId = 5
+                router.push(`/note/${userIdSlug}/${noteId}`);
+            }, 1000);
+        }, 1000);
+    }
+
     videoIdSlug = params.slug[1];
     userIdSlug = params.slug[0];
 
     useEffect(() => {
         const intervalId = setInterval(() => {
             try {
-                setCurrentTime(player.getCurrentTime());
+                if (!done) {
+                    setCurrentTime(player.getCurrentTime());
+                }
                 setDuration(player.getDuration());
 
                 setIsPlaying(player.getPlayerState() === 1);
                 if (player.getPlayerState() === 0) {
-                    console.log(notesWithTimes);
+                    if (!done) {
+                        // setNotes([inputValue, ...notes]);
+                        // setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
+                        done = true;
+                        setCurrentTime(player.getDuration());
+                    }
                 }
             }
             catch {
@@ -92,7 +134,7 @@ export default function Home({ params }) {
         }, 100);
 
         getTitle(videoIdSlug);
-    
+
         return () => clearInterval(intervalId);
     }, [player, notesWithTimes]);
 
@@ -112,16 +154,16 @@ export default function Home({ params }) {
         const requestUrl = `${url}?${query}`;
 
         https.get(requestUrl, (response) => {
-        let data = '';
+            let data = '';
 
-        response.on('data', (chunk) => {
-            data += chunk;
-        });
+            response.on('data', (chunk) => {
+                data += chunk;
+            });
 
-        response.on('end', () => {
-            const jsonData = JSON.parse(data);
-            setTitle(jsonData.title);
-        });
+            response.on('end', () => {
+                const jsonData = JSON.parse(data);
+                setTitle(jsonData.title);
+            });
 
         }).on('error', (error) => {
             console.error(error);
@@ -130,21 +172,38 @@ export default function Home({ params }) {
 
     const handleKeyDown = (event) => {
         if (event.key === 'Enter') {
-          setNotes([inputValue, ...notes]);
-          setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
-          setFirstLetter(true);
-          setInputValue('');
+            setNotes([inputValue, ...notes]);
+            //   setNotesWithTimes([...notesWithTimes, [inputValue, startTime, currentTime]]);
+
+            let wpm = 0;
+            let duration = currentTime - startTime;
+            let lenWords = inputValue.split(' ').length;
+            if (duration >= 60) {
+                wpm = lenWords / (duration / 60);
+            } else {
+                let mid = (60 / duration);
+                wpm = lenWords * mid;
+            }
+
+            setNotesWithTimes([...notesWithTimes, {
+                'note': inputValue,
+                'start': startTime,
+                'end': currentTime,
+                'wpm': parseInt(wpm)
+            }]);
+            setFirstLetter(true);
+            setInputValue('');
         } else {
             if (firstLetter) {
                 setStartTime(currentTime);
                 setFirstLetter(false);
             }
         }
-      };
-    
-      const handleChange = (event) => {
+    };
+
+    const handleChange = (event) => {
         setInputValue(event.target.value);
-      };
+    };
 
     return (
         <main className="flex min-h-screen flex-col items-center bg-background">
@@ -154,34 +213,34 @@ export default function Home({ params }) {
             }
             `}</style>
 
-            <CustomNavbar userId={userIdSlug}/>
+            <CustomNavbar userId={userIdSlug} />
             <div className='flex flex-row'>
                 <div className='flex flex-col items-center absolute left-10 w-52 z-0 pt-40'>
                     <div className='mb-3'>
                         <text className='font-main text-xl'>Need help?</text>
                     </div>
                     <text className='font-main text-sm mb-4 text-center'>Take better notes by improving:</text>
-                    <button 
+                    <button
                         className="relative inline-flex h-10 w-40 overflow-hidden rounded-2xl p-[1px]"
-                        onClick={()=>handleOpen()}
+                        onClick={() => handleOpen()}
                     >
                         <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
                         <span className="font-input inline-flex h-full w-full cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-5 py-2 text-xl text-white backdrop-blur-3xl hover:bg-gradient_1">
                             Speed
                         </span>
                     </button>
-                    <button 
+                    <button
                         className="relative inline-flex h-10 w-40 overflow-hidden rounded-2xl p-[1px] mt-5"
-                        onClick={()=>handleOpen1()}
+                        onClick={() => handleOpen1()}
                     >
                         <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
                         <span className="font-input inline-flex h-full w-full cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-5 py-2 text-xl text-white backdrop-blur-3xl hover:bg-gradient_1">
                             Content
                         </span>
                     </button>
-                    <button 
+                    <button
                         className="relative inline-flex h-10 w-40 overflow-hidden rounded-2xl p-[1px] mt-5"
-                        onClick={()=>handleOpen2()}
+                        onClick={() => handleOpen2()}
                     >
                         <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
                         <span className="font-input inline-flex h-full w-full cursor-pointer items-center justify-center rounded-2xl bg-slate-950 px-5 py-2 text-xl text-white backdrop-blur-3xl hover:bg-gradient_1">
@@ -194,7 +253,7 @@ export default function Home({ params }) {
                         {title ? (title.length > 35 ? `Watch: ${title.slice(0, 35)}...` : `Watch: ${title}`) : 'Loading...'}
                     </text>
                     <text className='pb-10 font-main text-sub_0'>When you are ready, click the video to begin</text>
-                    <Video/>
+                    <Video />
                     <div className='flex flex-row loading-div justify-between items-center pt-4'>
                         <Progress aria-label="Loading..." value={(currentTime / duration) * 100 + 1} className="w-auto mr-10"
                             classNames={{
@@ -209,13 +268,13 @@ export default function Home({ params }) {
                     </div>
                     <div className='wfull mt-5 mb-10'>
                         <text className='font-main text-sub_0'>{isPlaying ? 'Take a note below, then press ENTER' : 'Press play to start...'}</text>
-                        <input 
-                            type="text" 
-                            placeholder="Jot something down..." 
+                        <input
+                            type="text"
+                            placeholder="Jot something down..."
                             className="font-input input input-bordered w-full border-navbar_button_selected text-white focus:border-sub_0 mt-2"
                             value={inputValue}
                             onKeyDown={handleKeyDown}
-                            onChange={handleChange} 
+                            onChange={handleChange}
                             disabled={!isPlaying}
                         />
                         <text className='flex font-main text-sub_0 mt-5 mb-2 text-lg'>Notes:</text>
@@ -229,94 +288,119 @@ export default function Home({ params }) {
 
             <Modal backdrop={backdrop} isOpen={isOpen} onClose={onClose}>
                 <ModalContent className='bg-background'>
-                {(onClose) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1 text-main">Improve Your Speed</ModalHeader>
-                    <ModalBody>
-                        <p className='text-main text-title_0'> 
-                            Your score is partially based off of your words per minute!
-                        </p>
-                        <p className='text-input'>
-                            When typing your notes, try to type as quickly and accurately as possible.
-                            We only count your time when you press the first key, and stop it when you hit enter.
-                            This helps you focus on the content of the video, digest your own thoughts and ideas, and then
-                            put them into writing as efficiently as possible.
-                        </p>
-                        <p className='text_input'>
-                            In the real world, typing with increased speed can help you Jot down notes at the speed of thought.
-                            This helps your get back to the content as quickly as possible, while also helping you to have
-                            time to get all of your thoughts into writing!
-                        </p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose}>
-                        Close
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
+                    {(onClose) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1 text-main">Improve Your Speed</ModalHeader>
+                            <ModalBody>
+                                <p className='text-main text-title_0'>
+                                    Your score is partially based off of your words per minute!
+                                </p>
+                                <p className='text-input'>
+                                    When typing your notes, try to type as quickly and accurately as possible.
+                                    We only count your time when you press the first key, and stop it when you hit enter.
+                                    This helps you focus on the content of the video, digest your own thoughts and ideas, and then
+                                    put them into writing as efficiently as possible.
+                                </p>
+                                <p className='text_input'>
+                                    In the real world, typing with increased speed can help you Jot down notes at the speed of thought.
+                                    This helps your get back to the content as quickly as possible, while also helping you to have
+                                    time to get all of your thoughts into writing!
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={onClose}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
                 </ModalContent>
             </Modal>
 
             <Modal backdrop={backdrop} isOpen={isOpen1} onClose={onClose1}>
                 <ModalContent className='bg-black'>
-                {(onClose1) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">Improve Your Content</ModalHeader>
-                    <ModalBody>
-                        <p className='text-main text-title_0'> 
-                            Your score is partially based off how well you understand the content of the video!
-                        </p>
-                        <p className='text-input'>
-                            Content is key! Make sure you pay close attention to what is being talked about in
-                            the video you are watching. Take a moment to process what is being taught,
-                            then quickly Jot down your ideas, questions, thoughts, or a summary.
-                        </p>
-                        <p className='text_input'>
-                            In your everyday life, it is important to understand what you are committing to your notes.
-                            If you don't know what the content means, don't just blindly write it down! Instead, write down
-                            questions, ideas, or other similar topics which could help get you thinking when you look
-                            back at your notes!
-                        </p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose1}>
-                        Close
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
+                    {(onClose1) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Improve Your Content</ModalHeader>
+                            <ModalBody>
+                                <p className='text-main text-title_0'>
+                                    Your score is partially based off how well you understand the content of the video!
+                                </p>
+                                <p className='text-input'>
+                                    Content is key! Make sure you pay close attention to what is being talked about in
+                                    the video you are watching. Take a moment to process what is being taught,
+                                    then quickly Jot down your ideas, questions, thoughts, or a summary.
+                                </p>
+                                <p className='text_input'>
+                                    In your everyday life, it is important to understand what you are committing to your notes.
+                                    If you don't know what the content means, don't just blindly write it down! Instead, write down
+                                    questions, ideas, or other similar topics which could help get you thinking when you look
+                                    back at your notes!
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={onClose1}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
                 </ModalContent>
             </Modal>
 
             <Modal backdrop={backdrop} isOpen={isOpen2} onClose={onClose2}>
                 <ModalContent className='bg-black'>
-                {(onClose2) => (
-                    <>
-                    <ModalHeader className="flex flex-col gap-1">Improve Your Analysis</ModalHeader>
-                    <ModalBody>
-                        <p className='text-main text-title_0'> 
-                            Your score is partially based off of additional ideas, thoughts, and connections that you make on your own!
-                        </p>
-                        <p className='text-input'>
-                            When taking notes, it is important to perform some analysis on the ideas you are hearing.
-                            Connect what you hear to what you have seen before, and think of some new questions, comments,
-                            or concerns you may have about the topic. This analysis gets your brain thinking about the topic, and
-                            helps you to retain more of the information while drawing new connections in your mind.
-                        </p>
-                        <p className='text_input'>
-                            In the real world, this is where true learning takes place. When you are introduced to a new topic,
-                            don't just take it at face value. Perform analysis to deepen your understanding and find new meaning
-                            behind what you learn.
-                        </p>
-                    </ModalBody>
-                    <ModalFooter>
-                        <Button color="danger" variant="light" onPress={onClose2}>
-                        Close
-                        </Button>
-                    </ModalFooter>
-                    </>
-                )}
+                    {(onClose2) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Improve Your Analysis</ModalHeader>
+                            <ModalBody>
+                                <p className='text-main text-title_0'>
+                                    Your score is partially based off of additional ideas, thoughts, and connections that you make on your own!
+                                </p>
+                                <p className='text-input'>
+                                    When taking notes, it is important to perform some analysis on the ideas you are hearing.
+                                    Connect what you hear to what you have seen before, and think of some new questions, comments,
+                                    or concerns you may have about the topic. This analysis gets your brain thinking about the topic, and
+                                    helps you to retain more of the information while drawing new connections in your mind.
+                                </p>
+                                <p className='text_input'>
+                                    In the real world, this is where true learning takes place. When you are introduced to a new topic,
+                                    don't just take it at face value. Perform analysis to deepen your understanding and find new meaning
+                                    behind what you learn.
+                                </p>
+                            </ModalBody>
+                            <ModalFooter>
+                                <Button color="danger" variant="light" onPress={onClose2}>
+                                    Close
+                                </Button>
+                            </ModalFooter>
+                        </>
+                    )}
+                </ModalContent>
+            </Modal>
+
+            <Modal backdrop={backdrop} isOpen={isOpen3} onClose={onClose3} isDismissable={false}
+                classNames={{
+                    closeButton: 'bg-transparent hover:bg-transparent hover:cursor-not-allowed'
+                }}
+            >
+                <ModalContent className='bg-black'>
+                    {(onClose3) => (
+                        <>
+                            <ModalHeader className="flex flex-col gap-1">Nice Job!</ModalHeader>
+                            <ModalBody>
+                                <p className='text-main text-title_0'>
+                                    We are getting your score ready!
+                                </p>
+                                <p className='text-input'>
+                                    Please sit tight while <a href="https://gemini.google.com/" target='tab' className='underline text-title_0'>Gemini</a> generates a score for your performance.
+                                </p>
+                                <Spinner size='lg' />
+                            </ModalBody>
+                            <ModalFooter>
+                            </ModalFooter>
+                        </>
+                    )}
                 </ModalContent>
             </Modal>
         </main>
