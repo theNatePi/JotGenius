@@ -189,7 +189,7 @@ export default function Home({ params }) {
                 </div>
                 <div className='flex pt-10 flex-col z-10 bg-background p-10'>
                     <text className='font-main font-bold text-white pb-2 text-3xl text-left'>
-                        {title ? (title.length > 20 ? `Watch: ${title.slice(0, 20)}...` : `Watch: ${title}`) : 'Loading...'}
+                        {title ? (title.length > 35 ? `Watch: ${title.slice(0, 35)}...` : `Watch: ${title}`) : 'Loading...'}
                     </text>
                     <text className='pb-10 font-main text-sub_0'>When you are ready, click the video to begin</text>
                     <Video/>
