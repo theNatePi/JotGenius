@@ -34,7 +34,12 @@ def evaluate_type():
     if (content_type == 'application/json'):
         info = request.json
         print(info)
-        return "1"
+        return '1'
+
+
+@app.route('/videoIDs', methods=["GET"])
+def get_video_ids():
+    return database.accessVideoIDs()
 
 
 if __name__ == '__main__':

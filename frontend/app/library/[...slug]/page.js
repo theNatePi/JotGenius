@@ -12,8 +12,25 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 import Link from "next/link"
 
 let userId = {}
+let videos = [
+  {
+    id: "GIgc4viI2Vg"
+  },
+  {
+    id: "GIgc4viI2Vg"
+  },
+  {
+    id: "GIgc4viI2Vg"
+  },
+  {
+    id: "GIgc4viI2Vg"
+  },
+  {
+    id: "3AGYCjZjSR8"
+  },
+]
 
-const  VideoCard = ({videoUrl, videoId, videoSrc}) => {
+const VideoCard = ({ videoUrl, videoId, videoSrc }) => {
   const [title, setTitle] = useState("Loading...");
   const router = useRouter();
 
@@ -23,23 +40,23 @@ const  VideoCard = ({videoUrl, videoId, videoSrc}) => {
 
     const params = { format: "json", url: `https://www.youtube.com/watch?v=${videoIdString}` };
     const url = "https://www.youtube.com/oembed";
-    const query = querystring.stringify(params);
+    const query = querystring.stringify(params)
     const requestUrl = `${url}?${query}`;
 
     https.get(requestUrl, (response) => {
-    let data = '';
+      let data = '';
 
-    response.on('data', (chunk) => {
+      response.on('data', (chunk) => {
         data += chunk;
-    });
+      });
 
-    response.on('end', () => {
+      response.on('end', () => {
         const jsonData = JSON.parse(data);
         setTitle(jsonData.title);
-    });
+      });
 
     }).on('error', (error) => {
-        console.error(error);
+      console.error(error);
     });
   }
 
@@ -82,43 +99,15 @@ export default function Home({ params }) {
       <CustomNavbar second={true} userId={userId} />
       <div className='flex pt-10 w-screen items-center flex-col z-10 bg-background'>
         <text className='font-main font-bold text-white pb-2 text-3xl'>
-            What will you learn next?
+          What will you learn next?
         </text>
         <text className='pb-10 font-main text-sub_0'>select a video to begin</text>
       </div>
       <div className='flex flex-wrap w-screen gap-x-4 justify-center mt-10'>
         {videos.map((video, index) => (
-          <VideoCard key={index} video_url={video.url} videoId={video.id} videoSrc={video.image_path} />
+          <VideoCard key={index} video_url={`https://www.youtube.com/watch?v=${video.id}`} videoId={video.id} videoSrc={`https://img.youtube.com/vi/${video.id}/maxresdefault.jpg`} />
         ))}
       </div>
     </main>
   );
 }
-
-const videos = [
-  {
-    image_path: "https://img.youtube.com/vi/GIgc4viI2Vg/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=GIgc4viI2Vg",
-    id: "GIgc4viI2Vg"
-  },
-  {
-    image_path: "https://img.youtube.com/vi/GIgc4viI2Vg/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=GIgc4viI2Vg",
-    id: "GIgc4viI2Vg"
-  },
-  {
-    image_path: "https://img.youtube.com/vi/GIgc4viI2Vg/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=GIgc4viI2Vg",
-    id: "GIgc4viI2Vg"
-  },
-  {
-    image_path: "https://img.youtube.com/vi/GIgc4viI2Vg/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=GIgc4viI2Vg",
-    id: "GIgc4viI2Vg"
-  },
-  {
-    image_path: "https://img.youtube.com/vi/3AGYCjZjSR8/maxresdefault.jpg",
-    url: "https://www.youtube.com/watch?v=3AGYCjZjSR8",
-    id: "3AGYCjZjSR8"
-  },
-]
