@@ -39,8 +39,6 @@ export function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        //const url = new URL('http://127.0.0.1:5000/login');
-
         const response = await fetch('http://127.0.0.1:5000/login', {
           method: 'POST',
           headers: {
