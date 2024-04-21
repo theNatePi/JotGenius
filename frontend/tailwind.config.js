@@ -46,6 +46,8 @@ module.exports = {
         gradient_1: '#110f2b',
         card_0: '#D9D9D999',
         card_1: '#737373FF',
+        card_2: '#472B6E55',
+        card_3: '#7B4BBFAA',
         typing_cursor: '#333355',
         
         navbar_button_selected: '#9e58d3',
