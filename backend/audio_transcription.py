@@ -1,4 +1,3 @@
-from contacts import deepgram_api_key
 from youtube_transcript_api import YouTubeTranscriptApi
 
 
