@@ -39,8 +39,6 @@ export function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        //const url = new URL('http://127.0.0.1:5000/login');
-
         const response = await fetch('http://127.0.0.1:5000/login', {
           method: 'POST',
           headers: {
@@ -51,7 +49,8 @@ export function LoginForm() {
 
         if (response.ok) {
           console.log('Login successful!');
-          console.log(response);
+          const responseData = await response.text();
+          console.log('Response:', responseData);
           // Redirect or show success message
         } else {
           console.error('Login failed');
