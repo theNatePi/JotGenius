@@ -33,13 +33,22 @@ JotGenius is a web application designed to gamify learning and skill-building th
 1. Clone the repository.
 2. Download PocketBase from their website and follow installation instructions.
 3. Run PocketBase locally.
-4. Change directory into backend folder.
-5. Install the required dependencies using `pip install -r requirements.txt`.
-6. Run the Flask server.
-7. Change directory into frontend folder.
-8. Run `npm install`
-9. Run `npm run dev`
-10. Access the web app in your browser.
+4. Find the database schema (db-template) in the backend directory and use pb_schema_2.json to import the tables into local PocketBase UI.
+5. In PocketBase, create a user with the following attributes:
+guest000account as ID
+{
+  "notes": [
+    "h28xij0k9ni7ge8"
+  ]
+} for note_library and set all other attributes at your discretion.
+7. Change directory into backend folder.
+8. Install the required dependencies using `pip install -r requirements.txt`.
+9. Create a file called contacts.py in the /backend folder and add a variable called gemini_api_key, setting it equal to your Gemini API key.
+10.  Run the Flask server.
+11.  Change directory into frontend folder.
+12. Run `npm install`
+13. Run `npm run dev`
+14. Access the web app in your browser.
 
 ## Usage
 
