@@ -39,7 +39,7 @@ export function LoginForm() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        const response = await fetch('http://127.0.0.1:5000/login', {
+        const response = await fetch('http://127.0.0.1:8080/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -51,6 +51,8 @@ export function LoginForm() {
           console.log('Login successful!');
           const responseData = await response.text();
           console.log('Response:', responseData);
+          let user_id = JSON.parse(responseData).user_id;
+          router.push(`/library/${user_id}`);
           // Redirect or show success message
         } else {
           console.error('Login failed');

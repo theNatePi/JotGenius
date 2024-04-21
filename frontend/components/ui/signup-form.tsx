@@ -7,8 +7,11 @@ import {
   IconBrandGithub,
   IconBrandGoogle,
 } from "@tabler/icons-react";
+import { useRouter } from 'next/navigation';
 
 export function SignupFormDemo() {
+  const router = useRouter();
+
   const [formData, setFormData] = React.useState({
     firstname: '',
     lastname: '',
@@ -35,9 +38,9 @@ export function SignupFormDemo() {
     e.preventDefault();
     if (validateForm()) {
       try {
-        //const url = new URL('http://127.0.0.1:5000/login');
+        //const url = new URL('http://127.0.0.1:8080/login');
 
-        const response = await fetch('http://127.0.0.1:5000/signup', {
+        const response = await fetch('http://127.0.0.1:8080/signup', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -49,6 +52,8 @@ export function SignupFormDemo() {
           console.log('Sign Up successful!');
           const responseData = await response.text();
           console.log('Response:', responseData);
+          let user_id = JSON.parse(responseData).user_id;
+          router.push(`/library/${user_id}`);
           // Redirect or show success message
         } else {
           console.error('Signup failed');

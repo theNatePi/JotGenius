@@ -17,13 +17,26 @@ let noteId = {}
 export default function Home({ params }) {
   const router = useRouter();
   const [title, setTitle] = useState(null);
-
-  let videoId = noteContent.videoId;
+  const [videoId, setVideoId] = useState(null);
+  const [noteContent, setNoteContent] = useState({
+        'lines': [
+            {
+                'note': 'Loading...'
+            },
+        ],
+        'videoId': 'Oc6ID1tvFNw',
+        'geminiSuggestion': 'Loading...'
+    }
+  );
+  const [score, setScore] = useState(0);
 
   userId = params.slug[0]
   noteId = params.slug[1]
 
   const getTitle = (videoIdString) => {
+    if (!videoIdString) {
+        return;
+    }
     const https = require('https');
     const querystring = require('querystring');
 
@@ -52,6 +65,37 @@ export default function Home({ params }) {
   useEffect(() => {
     getTitle(videoId);
   }, [videoId]);
+ 
+
+  useEffect(() => {
+    let request_data = {
+        'noteId': noteId
+    }
+
+    const fetchData = async () => {
+        let response = await fetch('http://127.0.0.1:8080/notebyid', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(request_data),
+        });
+
+        let note_content = await JSON.parse(await response.text());
+
+        setVideoId(note_content.video_id);
+        setNoteContent(
+            {
+                'lines': note_content.note_content,
+                'videoId': videoId,
+                'geminiSuggestion': note_content.feedback
+            }
+        );
+        setScore(note_content.score)
+    };
+
+    fetchData();
+  }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background">
@@ -60,7 +104,7 @@ export default function Home({ params }) {
         <div className="w-1/2 rounded-3xl bg-navbar_button_secondary bg-opacity-5 border border-navbar_button_secondary pl-10 pt-6">
             <div className="flex flex-row justify-between">
                 <text className="font-main text-3xl font-bold">Your Notes:</text>
-                <Chip color="success" variant="shadow" className="mr-10 mt-1.5"><text className="font-main font-bold">Score: 0/100</text></Chip>
+                <Chip color="success" variant="shadow" className="mr-10 mt-1.5"><text className="font-main font-bold">Score: {score}/100</text></Chip>
             </div>
             <div className="flex flex-col mt-5 pl-4 mr-9 overflow-y-scroll h-5/6 hover:border-navbar_button_secondary border rounded-lg border-transparent">
                 {noteContent.lines.map((item, index) => (
@@ -92,80 +136,4 @@ export default function Home({ params }) {
       </div>
     </main>
   );
-}
-
-const noteContent = {
-    'lines': [
-        {
-            'note': 'This is the first line'
-        },
-        {
-            'note': 'This is the second line qeifjoqejif iqjo  oqijf oijeoijdo jefoiqjeoi oqeij oijefoifjoeijo eq fqo jf'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the hiiii line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the thirs line'
-        },
-        {
-            'note': 'This is the okokok line'
-        }
-    ],
-    'videoId': 'Oc6ID1tvFNw',
-    'geminiSuggestion': 'blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah blah'
 }

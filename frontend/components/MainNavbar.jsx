@@ -1,7 +1,7 @@
 import React from "react";
 import { Navbar, NavbarBrand, NavbarContent, NavbarItem, Link, Button, Dropdown, DropdownTrigger, Avatar, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
-export default function CustomNavbar({ first, second, third, userId = 'guest' }) {
+export default function CustomNavbar({ first, second, third, userId = 'guest000account' }) {
   return (
     <Navbar className="bg-background_complement w-full border-b-1 border-navbar_button_selected">
       <NavbarBrand className="-ml-3.5">
@@ -19,7 +19,7 @@ export default function CustomNavbar({ first, second, third, userId = 'guest' })
           </Link>
         </NavbarItem>
         <NavbarItem>
-          <Link color="blue" href="#" className={third ? "text-navbar_button_selected font-bold" : "text-navbar_button_secondary"}>
+          <Link color="blue" href={`/dashboard/${userId}`} className={third ? "text-navbar_button_selected font-bold" : "text-navbar_button_secondary"}>
             Dashboard
           </Link>
         </NavbarItem>

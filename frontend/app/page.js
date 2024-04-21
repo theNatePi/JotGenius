@@ -58,14 +58,14 @@ export default function Home() {
                 Sign Up
               </span>
             </button>
-            <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] ml-10">
+            <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px] ml-10" onClick={handleLoginClick}>
               <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
               <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-5 py-2 text-2xl font-medium text-white backdrop-blur-3xl hover:bg-gradient_1">
                 Login
               </span>
             </button>
           </div>
-          <button className="relative inline-flex h-10 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-10" onClick={() => router.push('/library/guest')}>
+          <button className="relative inline-flex h-10 overflow-hidden rounded-xl p-[1px] justify-center w-72 mt-10" onClick={() => router.push('/library/guest000account')}>
               <span className="absolute inset-[-1000%] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_100%,#E2CBFF_100%,#E2CBFF_100%)]" />
               <span className="font-main inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-slate-950 bg-opacity-80 px-5 py-2 text-xl text-white backdrop-blur-3xl hover:bg-gradient_1">
                 <text className="">Start A New Jot</text>
@@ -149,7 +149,7 @@ export default function Home() {
             <text className="font-input text-3xl pr-1 pt-4">today</text>
           </div>
           <div className="flex justify-center w-auto">
-            <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px]">
+            <button className="relative inline-flex h-12 overflow-hidden rounded-full p-[1px]" onClick={handleSignUpClick}>
               <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2CBFF_0%,#393BB2_50%,#E2CBFF_100%)]" />
               <span className="font-main font-bold inline-flex h-full w-full cursor-pointer items-center justify-center rounded-full bg-slate-950 px-5 py-2 text-2xl text-white backdrop-blur-3xl hover:bg-gradient_1">
                 Sign Up

@@ -81,17 +81,18 @@ export default function Home({ params }) {
     }
 
     handleFinal = () => {
-        setTimeout(() => {
+        setTimeout(async () => {
             setBackdrop('blur')
             onOpen3();
 
             let finalJSON = {
                 'content': notesWithTimes,
-                'videoId': videoIdSlug
+                'videoId': videoIdSlug,
+                'userId': userIdSlug
             }
             console.log(finalJSON);
 
-            fetch('http://127.0.0.1:5000/type', {
+            let response = await fetch('http://127.0.0.1:8080/type', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -99,10 +100,8 @@ export default function Home({ params }) {
                 body: JSON.stringify(finalJSON),
             });
 
-            setTimeout(() => {
-                let noteId = 5
-                router.push(`/note/${userIdSlug}/${noteId}`);
-            }, 1000);
+            let noteId = await response.text();
+            router.push(`/note/${userIdSlug}/${noteId}`);
         }, 1000);
     }
 

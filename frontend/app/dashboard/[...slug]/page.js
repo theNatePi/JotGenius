@@ -3,7 +3,7 @@
 import { Button } from "@nextui-org/button";
 import { LoginForm } from "@/components/ui/login-form";
 import CustomNavbar from "@/components/MainNavbar";
-import { useState, useEffect, use } from "react";
+import { useState, useEffect, use, useId } from "react";
 import { useRouter } from 'next/navigation';
 
 import Image from "next/image";
@@ -12,7 +12,7 @@ import { CardBody, CardContainer, CardItem } from "@/components/ui/3d-card";
 
 let userId = {}
 
-const VideoCard = ({ videoUrl, videoId, videoSrc }) => {
+const VideoCard = ({ videoUrl, videoId, videoSrc, noteId }) => {
   const [title, setTitle] = useState("Loading...");
   const router = useRouter();
 
@@ -47,7 +47,7 @@ const VideoCard = ({ videoUrl, videoId, videoSrc }) => {
   }, [videoId]);
 
   return (
-    <main onClick={() => router.push(`/type/${userId}/${videoId}`)} className='cursor-pointer hover:cursor-pointer'>
+    <main onClick={() => router.push(`/note/${userId}/${noteId}`)} className='cursor-pointer hover:cursor-pointer'>
       <CardContainer className="inter-var -mt-28">
         <CardBody className="bg-gradient-to-tr from-card_2 to-card_3 relative group/card dark:hover:shadow-2xl dark:hover:shadow-emerald-500/[0.1]  h-auto sm:w-[25rem] sm:h-[18rem] rounded-xl p-6 border border-navbar_button_secondary">
           <CardItem
@@ -75,19 +75,26 @@ const VideoCard = ({ videoUrl, videoId, videoSrc }) => {
 
 export default function Home({ params }) {
   const [videoIds, setVideoIds] = useState([]);
+  const [result, setResult] = useState([]);
 
   userId = params.slug[0]
 
+  let to_send = {
+    'user_id': userId
+  }
+
   useEffect(() => {
     const fetchData = async () => {
-      let result = await fetch('http://127.0.0.1:8080/videoIDs', {
+      let result = await fetch('http://127.0.0.1:8080/notesforuser', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
+        body: JSON.stringify(to_send),
       });
       result = await result.text();
-      setVideoIds(JSON.parse(result).video_ids);
+      result = JSON.parse(result).result;
+      setResult(result);
     }
 
     fetchData();
@@ -95,17 +102,17 @@ export default function Home({ params }) {
 
   return (
     <main className="flex min-h-screen flex-col items-center bg-background">
-      <CustomNavbar second={true} userId={userId} />
+      <CustomNavbar third={true} userId={userId} />
       <div className='flex pt-10 w-screen items-center flex-col z-10 bg-background'>
         <text className='font-main font-bold text-white pb-2 text-3xl'>
-          What will you learn next?
+          Welcome Back!
         </text>
-        <text className='pb-10 font-main text-sub_0'>select a video to begin</text>
+        <text className='pb-10 font-main text-sub_0'>your previous notes</text>
       </div>
       <div className='flex flex-wrap w-screen gap-x-4 justify-center mt-10'>
-        {videoIds.map((video, index) => (
+        {result.map((r, index) => (
           // <text>{video}</text>
-          <VideoCard key={index} video_url={`https://www.youtube.com/watch?v=${video}`} videoId={video} videoSrc={`https://img.youtube.com/vi/${video}/maxresdefault.jpg`} />
+          <VideoCard key={index} video_url={`https://www.youtube.com/watch?v=${r[1]}`} videoId={r[1]} noteId={r[0]} videoSrc={`https://img.youtube.com/vi/${r[1]}/maxresdefault.jpg`} />
         ))}
       </div>
     </main>
