@@ -69,20 +69,31 @@ def giveNoteToUser(user_id, note_id):
     try:
         user_return = CLIENT.collection('jot_users').get_one(user_id)
         note_string = user_return.note_library
-        note_dict = json.loads(note_string)
-        new_notes = list(note_dict['notes']).append(note_id)
-        CLIENT.collection('jot_users').update(user_id, {'notes': new_notes})
+        note_dict = note_string
+
+        current_notes = note_dict['notes']
+        current_notes.append(note_id)
+        new_notes = current_notes
+
+        print(new_notes)
+        print(note_dict)
+
+        data = {
+            'note_library': note_dict
+        }
+
+        CLIENT.collection('jot_users').update(user_id, data)
         note_data = {
             "code": 200,
             "message": 'Note added successfully.',
             "note_id": note_id
         }
-        return jsonify(note_data)
+        return note_data
     except ClientResponseError as err:
         if err.status == 404:
             note_data = {
                 "code": 404,
-                "message": err.message,
+                "message": err.data,
                 "note_id": ''
             }
             return jsonify(note_data)
@@ -96,7 +107,7 @@ def giveNoteToUser(user_id, note_id):
         elif err.status == 403:
             note_data = {
                 "code": 403,
-                "message": err.message,
+                "message": err.data,
                 "note_id": ''
             }
             return jsonify(note_data)
@@ -145,7 +156,7 @@ def accessNoteInfo(note_id):
         if err.status == 404:
             note_data = {
                 "code": 404,
-                "message": err.message,
+                "message": err.data,
                 "note_id": ''
             }
             return jsonify(note_data)
@@ -159,7 +170,7 @@ def accessNoteInfo(note_id):
         elif err.status == 403:
             note_data = {
                 "code": 403,
-                "message": err.message,
+                "message": err.data,
                 "note_id": ''
             }
             return jsonify(note_data)
@@ -167,6 +178,7 @@ def accessNoteInfo(note_id):
 
 def attemptVideoUpload(video_id, transcription):
     vid_info = {
+        "id": f'{video_id}-111',
         "video_id": video_id,
         "transcription": transcription
     }
@@ -192,13 +204,44 @@ def attemptVideoUpload(video_id, transcription):
             return jsonify(vid_data)
 
 
+def accessVideoInfo(video_id):
+    try:
+        video_return = CLIENT.collection('jot_notes').get_one(f'{video_id}-111')
+        video_data = {
+            "code": 200,
+            "transcription": video_return.transcription
+        }
+        return video_data
+    except ClientResponseError as err:
+        if err.status == 404:
+            video_data = {
+                "code": 404,
+                "message": err.data,
+                "transcription": ''
+            }
+            return video_data
+        elif err.status == 400:
+            video_data = {
+                "code": 400,
+                "message": err.data,
+                "transcription": ''
+            }
+            return video_data
+        elif err.status == 403:
+            video_data = {
+                "code": 403,
+                "message": err.data,
+                "transcription": ''
+            }
+            return video_data
+
 def accessVideoIDs():
     try:
         results = CLIENT.collection(
-            'jot_videos').get_full_list({'sort': '-created'})
+            'jot_videos').get_full_list()
         id_list = []
         for result in results:
-            id_list.append(result.id)
+            id_list.append(result.video_id)
         vid_data = {
             "code": 200,
             "video_ids": id_list
@@ -208,6 +251,28 @@ def accessVideoIDs():
         if err.status == 400:
             vid_data = {
                 "code": 400,
-                "message": err.message,
+                "message": err.data,
             }
             return jsonify(vid_data)
+        else:
+            print(err)
+
+def accessVidIDFromNote(note_id):
+    note_return = CLIENT.collection('jot_notes').get_one(note_id)
+    return note_return.video_id
+
+def accessUserNoteVideoInfo(user_id):
+    user_return = CLIENT.collection('jot_users').get_one(user_id)
+    note_string = user_return.note_library
+    note_dict = note_string
+    return_dict = {'result': []}
+    for note_id in list(note_dict['notes']):
+        return_dict['result'].append([note_id, accessVidIDFromNote(note_id)])
+    
+    return jsonify(return_dict)
+
+
+        
+
+
+

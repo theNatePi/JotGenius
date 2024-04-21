@@ -1,45 +1,70 @@
 import google.generativeai as genai
 from contacts import gemini_api_key
-from IPython.display import Markdown
-import textwrap
 import json
 
-genai.configure(api_key=gemini_api_key)
+def get_rating(user_content, transcript):
+    PROMPT = f"""A user is taking notes on an educational video, and I would like you to rate them on their performance.
+Their notes will be in short blurbs, please avoid rating based off of grammar and only rate on the criteria I provide.
 
-speed = "compared to the average person, how good is this wpm? out of 100"
-'''
-timeliness = "How on time was I when taking notes compared to the video. Draw from start end times of the user and the listed time stanps
-of the deep gram"
-'''
+Before I explain the criteria, I will give you the user input and the transcript of the video.
 
-content = "Overall content of the notes, overall content of the video... did I capture the overall content of the video "
+Here is the transcript of the video:
+```
+{transcript}
+```
+This is a list of json objects with the following content
+- The text the speaker was saying in the video ("text")
+- The time they started talking ("start")
+- The duration of this sentence ("duration")
 
-score = "out of 100 give me a score"
 
-model = genai.GenerativeModel('gemini-pro')
+Here is the user input
+```
+{user_content}
+```
+This is a list of json objects with the following content
+- The note the user took ("note")
+- The time the user started typing ("start")
+- The time the user entered the note ("end")
+- The words per minute that the user typed at ("wpm")
 
-response = model.generate_content(
-    "What is the meaning of life? Give it to me in the form of a JSON object withe ach field being one reason")
-text = response.candidates[0].content.parts[0].text
-print(text)
-'''
+----------------------
+Now for the grading criteria:
 
-def generate_response(text):
-    """
-    Given this JSON object, look at the field named content which is a list where each element is a JSON object that contains a field named 
-    note (which is the note made), start (which is when the first letter was typed in the note), end (which is when the enter key was hit 
-    for each note), and wpm (which is the words per minute for each note) and give me a score out of 100 for speed 
-    (looking at the wpm for each note and comparing it with the average wpm), another for timeliness
-    (based on looking at the timestamp of the deepgram and each elements start and stop times) and for content 
-    (looking at each elements notes overall and comparing it to the deepgram transcript). After you obtain your scores, give me a 
-    JSON object with fields: score (which is your overall score of speed, timeliness, and content) and feedback 
-    (which is your feedback on what to improve on)
-    """
-    prompt = "be lenient with gramamr"
-    start = "When you hit the first letter of the statement"
-    End = "When you hit enter"
-    speed_prompt = "Compared to the average person, how good is the words per minute?"
-    response = model.generate_content("What is the meaning of life")
-    return response
+First, grade the user out of 100 on their typing speed.
+Take the WPM from each of their notes, and use them to determine if they are a fast typer or not.
 
-'''
+Second, grade the user out of 100 on the content of their notes. Understand the overall content of the video
+through it's transcript, and see if the user captured all of the important points. For example, you may add points
+each time a user mentions an important part of the video, or subtract them when the user does not write something down
+or takes note of something unimportant.
+
+Last, grade the user out of 100 on the timeliness of their notes. Look at the timestamps for when the user takes note of a
+topic, and for when the speaker mentions it. Make sure the user is not falling behind, and deduct points if they take note of
+something long after it was said, or if they skip content to catch up.
+
+Take the average of these three scores with a little less weight on typing speed, and provide a final score out of 100.
+Be harsh but give bonus points if they think outside of the box, and dont just copy directly what the speaker says (although stay on topic).
+Be very harsh if they deviate from the topic in a way which is not educational.
+
+----------------------
+Please return in the following format:
+
+```
+"score": <integer score 1 to 100 inclusive> ||| "feedback": <short 2 - 3 sentence feedback on how the user can improve next time based off of the criteria provided>
+```
+
+Only replace the content in and including the < and >. Do not change any other content.
+"""
+    genai.configure(api_key=gemini_api_key)
+
+    model = genai.GenerativeModel('gemini-pro')
+
+    response = model.generate_content(PROMPT)
+    text = response.candidates[0].content.parts[0].text
+    score, feedback = text.split(" ||| ")
+    score = score.strip('"score": ')
+    feedback = feedback.strip('"feedback": ')
+    print("TEXT", text)
+    print(score, feedback)
+    return score, feedback

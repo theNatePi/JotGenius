@@ -1,6 +1,7 @@
 from flask import Flask, request
 from flask_cors import CORS
 from flask_cors import CORS
+from gemini import get_rating
 import database
 
 app = Flask(__name__)
@@ -33,11 +34,47 @@ def evaluate_type():
     content_type = request.headers.get('Content-Type')
     if (content_type == 'application/json'):
         info = request.json
-        print(info)
-        return '1'
+
+        video_id = info['videoId']
+        user_notes = info['content']
+        user_id = info['userId']
+
+        video_transcript = database.accessVideoInfo(video_id)["transcription"]
+
+        score, feedback = get_rating(user_notes, video_transcript)
+
+        note_info = database.attemptNoteUpload(user_id, user_notes, video_id, score, feedback)
+        note_id = note_info['note_id']
+
+        return note_id
+    
+@app.route('/notebyid', methods=['POST'])
+def note_by_id():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        info = request.json
+
+        note_id = info['noteId']
+
+        note_info = database.accessNoteInfo(note_id)
+
+        return note_info
+    
+
+@app.route('/notesforuser', methods=['POST'])
+def notes_for_user():
+    content_type = request.headers.get('Content-Type')
+    if (content_type == 'application/json'):
+        info = request.json
+
+        user_id = info['user_id']
+
+        note_info = database.accessUserNoteVideoInfo(user_id)
+
+        return note_info
 
 
-@app.route('/videoIDs', methods=["GET"])
+@app.route('/videoIDs', methods=["POST"])
 def get_video_ids():
     return database.accessVideoIDs()
 
