@@ -1,6 +1,21 @@
+<img width="vw" alt="Screenshot 2024-04-25 at 11 04 53 AM" src="https://github.com/theNatePi/JotGenius/assets/78774649/1cedaead-b135-46d6-8c5a-14d91d7c7a64">
+
 # JotGenius
 
-JotGenius is a web application designed to gamify learning and skill-building through customizable mediums such as typing and note-taking. The app allows users to watch a YouTube video of their choosing while simultaneously being prompted to take bullet-point style notes as the video plays. 
+This project was built for LA Hacks 2024, see the Devpost [here](https://devpost.com/software/jotgenius)!
+
+JotGenius gamifies the process of taking notes through timing, scoring, and suggesting improvements based on your notes -- all supported by [Google Gemini](https://gemini.google.com/). Learn more with educational videos, improve your timeliness and note content through LLM suggestions, and recall what you have learned in your dashboard of past videos.
+
+<details>
+  <summary>
+    <b>Images / Examples</b>
+  </summary>
+
+   -|-
+  :-------------------------:|:-------------------------:
+  **YouTube Based Content Libary** <img src="https://github.com/theNatePi/JotGenius/assets/78774649/64080e61-f53d-4268-a2a8-a78bece54ea5" width="1000" />  |  **Custom Note Taking Page** <img src="https://github.com/theNatePi/JotGenius/assets/78774649/4abe66d5-5826-473c-bef5-c72370e63792" width="1000" />
+  **Note Summary Page** <img src="https://github.com/theNatePi/JotGenius/assets/78774649/05138612-131d-4f77-9e1a-8ba87dfee700" width="1000" />  |  **Custom Gemini Suggestions** <img src="https://github.com/theNatePi/JotGenius/assets/78774649/5f5f85d0-be06-4a49-84c5-61b7cc1084a6" width="1000" />
+</details>
 
 ## Features
 
@@ -13,14 +28,20 @@ JotGenius is a web application designed to gamify learning and skill-building th
 
 ## Technologies Used
 
-- Python
-- NextJS
-- PocketBase
-- Flask
-- Gemini API
-- YouTube API
-- DaisyUI
-- Aceternity
+Frontend
+
+![Next JS](https://img.shields.io/badge/Next-black?style=for-the-badge&logo=next.js&logoColor=white)
+![React](https://img.shields.io/badge/react-%2320232a.svg?style=for-the-badge&logo=react&logoColor=%2361DAFB)
+- [Aceternity](https://www.aceternity.com/components)
+- [DaisyUI](https://daisyui.com/)
+
+Backend
+
+![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)
+![Flask](https://img.shields.io/badge/flask-%23000.svg?style=for-the-badge&logo=flask&logoColor=white)
+- [PocketBase](https://pocketbase.io/)
+- [Gemini API](https://gemini.google.com)
+- [YouTube API](https://developers.google.com/youtube/iframe_api_reference)
 
 ## Future Plans
 
@@ -31,10 +52,12 @@ JotGenius is a web application designed to gamify learning and skill-building th
 ## Installation
 
 1. Clone the repository.
-2. Download PocketBase from their website and follow installation instructions.
+2. Download [PocketBase](https://pocketbase.io/) from their website and follow installation instructions.
 3. Run PocketBase locally.
 4. Find the database schema (db-template) in the backend directory and use pb_schema_2.json to import the tables into local PocketBase UI.
-5. In PocketBase, create a user with the following attributes:
+     - With PocketBase running, navigate to the Admin Pannel (http://127.0.0.1:8090/_/).
+     - Sign in, go to settings, and upload the schema.
+6. In PocketBase, create a user with the following attributes:
 
 guest000account as ID
 ```
@@ -57,12 +80,12 @@ for note_library and set all other attributes at your discretion.
 
 ## Usage
 
-1. Sign in to your account.
+1. Sign in or sign up on the landing page.
 2. Choose a video from the available library.
 3. Start watching the video and take notes as prompted.
 4. After the video ends, review your score and Gemini suggestions.
-5. Access your dashboard to review all your previously taken notes, scores, and suggestions
-6. Access your library to watch another video.
+5. Access your dashboard to review all your previously taken notes, scores, and suggestions.
+6. Access your library to watch another video, and improve with Gemini's suggestions.
 
 ## Contributors
 
